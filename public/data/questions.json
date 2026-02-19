@@ -1,0 +1,96 @@
+[
+  {
+    "id": 1001,
+    "testId": 1,
+    "type": "single",
+    "text": "Какой тег создаёт ссылку?",
+    "options": ["<a>", "<link>", "<url>", "<ref>"],
+    "correct": "<a>",
+    "score": 1,
+    "shuffle": true
+  },
+  {
+    "id": 1002,
+    "testId": 1,
+    "type": "multiple",
+    "text": "Какие атрибуты часто встречаются у <img>?",
+    "options": ["src", "href", "alt", "title", "action"],
+    "correct": ["src", "alt", "title"],
+    "score": 3,
+    "shuffle": true
+  },
+  {
+    "id": 1003,
+    "testId": 1,
+    "type": "text",
+    "text": "Укажите правильный DOCTYPE для HTML5.",
+    "score": 1
+  },
+  {
+    "id": 1004,
+    "testId": 1,
+    "type": "single",
+    "text": "Где должен находиться <title>?",
+    "options": [
+      "Внутри <body>",
+      "Внутри <head>",
+      "После </html>",
+      "Перед <!DOCTYPE>"
+    ],
+    "correct": "Внутри <head>",
+    "score": 1
+  },
+  {
+    "id": 1005,
+    "testId": 1,
+    "type": "multiple",
+    "text": "Что относится к блочным элементам?",
+    "options": ["<div>", "<span>", "<p>", "<section>", "<strong>"],
+    "correct": ["<div>", "<p>", "<section>"],
+    "score": 3
+  },
+  {
+    "id": 2001,
+    "testId": 2,
+    "type": "single",
+    "text": "Какое свойство задаёт цвет текста?",
+    "options": ["background", "color", "fill", "font-color"],
+    "correct": "color",
+    "score": 1
+  },
+  {
+    "id": 2002,
+    "testId": 2,
+    "type": "multiple",
+    "text": "Какие значения допустимы для display?",
+    "options": ["block", "inline", "grid", "flex", "center"],
+    "correct": ["block", "inline", "grid", "flex"],
+    "score": 4,
+    "shuffle": true
+  },
+  {
+    "id": 2003,
+    "testId": 2,
+    "type": "text",
+    "text": "Напишите CSS-свойство для установки межстрочного интервала.",
+    "score": 1
+  },
+  {
+    "id": 2004,
+    "testId": 2,
+    "type": "single",
+    "text": "Какое свойство отвечает за внешний отступ?",
+    "options": ["padding", "gap", "margin", "outline-offset"],
+    "correct": "margin",
+    "score": 1
+  },
+  {
+    "id": 2005,
+    "testId": 2,
+    "type": "multiple",
+    "text": "Какие единицы относительные?",
+    "options": ["px", "em", "rem", "%", "mm"],
+    "correct": ["em", "rem", "%"],
+    "score": 3
+  }
+]

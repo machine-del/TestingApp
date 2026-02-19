@@ -1,14 +1,11 @@
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { NavMenu } from "../components/NavMenu";
 
 export function AppLayout() {
   return (
     <>
       <header>
-        <nav>
-          <Link to="/login">Логин</Link>
-          <Link to="/student">Студент</Link>
-          <Link to="/admin">Админ</Link>
-        </nav>
+        <NavMenu />
       </header>
       <main>
         <Outlet />

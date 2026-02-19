@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Тестирование №10",
+    "shortDescription": "Описание тестирования длинный текст дадададада…",
+    "durationSec": 2000,
+    "passScore": 70,
+    "attemptsAllowed": 3,
+    "allowRetry": true,
+    "isPublished": true,
+    "meta": {
+      "project": "ПАЗЛ",
+      "track": "Backend",
+      "course": "2 курс",
+      "purpose": "Проверка знаний"
+    },
+    "deadlineISO": "2026-10-05T00:00:00Z",
+    "tags": ["ПАЗЛ", "Backend", "2 курс", "Проверка знаний"]
+  },
+  {
+    "id": 2,
+    "title": "Тестирование №9",
+    "shortDescription": "Короткое описание для второго теста…",
+    "durationSec": 2000,
+    "passScore": 80,
+    "attemptsAllowed": 1,
+    "allowRetry": false,
+    "isPublished": true,
+    "meta": {
+      "project": "КОД",
+      "track": "Frontend",
+      "course": "1 курс",
+      "purpose": "Проверка знаний"
+    },
+    "deadlineISO": null,
+    "tags": ["КОД", "Frontend", "1 курс", "Проверка знаний"]
+  }
+]

@@ -1,41 +1,64 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AppLayout } from "../layout/AppLayout";
-import { NotFound } from "../pages/Errors/NotFound";
+import { NotFound } from "../pages/Errors/NotFoundPage";
 import { StudentLayout } from "../layout/StudentLayout";
 import { AdminLayout } from "../layout/AdminLayout";
 import { AdminPage } from "../pages/Admin/AdminPage";
-import { StudentPage } from "../pages/Student/StudentPage";
 import { LoginPage } from "../pages/Login/LoginPage";
+import StudentsTestPage from "../pages/Student/StudentsTestPage";
+import { StudentStatsPage } from "../pages/Student/StudentStatsPage";
+import { StudentProfilePage } from "../pages/Student/StudentProfilePage";
+import StudentsTest from "../pages/Student/StudentsRunTest";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <AppLayout />,
     children: [
-      { path: "login", element: <LoginPage /> },
+      {
+        path: "login",
+        element: <LoginPage />,
+      },
       {
         path: "student",
-        element: <StudentPage />,
+        element: <StudentLayout />,
         children: [
           {
             index: true,
-            element: <StudentPage />,
+            element: <Navigate to={"tests"} />,
           },
           {
-            path: "test",
-            element: <StudentLayout />,
+            path: `tests`,
+            element: <StudentsTestPage />,
+          },
+          {
+            path: `test/:id`,
+            element: <StudentsTest />,
+          },
+          {
+            path: `statistics`,
+            element: <StudentStatsPage />,
+          },
+          {
+            path: `profile`,
+            element: <StudentProfilePage />,
           },
         ],
       },
       {
         path: "admin",
-        element: <AdminPage />,
+        element: <AdminLayout />,
         children: [
           { index: true, element: <AdminPage /> },
-          { path: "test", element: <AdminLayout /> },
+          { path: "profile", element: <h2>Admin profile</h2> },
+          { path: "settings", element: <h2>Admin settings</h2> },
         ],
       },
-      { path: "*", element: <NotFound /> },
     ],
+    errorElement: <NotFound />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);

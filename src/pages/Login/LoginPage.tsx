@@ -6,7 +6,7 @@ export function LoginPage() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    navigate("/student", { replace: true });
+    navigate("/student");
   };
 
   return (

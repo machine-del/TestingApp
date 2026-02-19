@@ -5,7 +5,27 @@
 }
 
 body {
-font-family: Inter, sans-serif;
+  font-family: Inter, sans-serif;
   background: #f7f9fa;
   color: #222;
+}
+
+.active {
+  color: red;
+  font-weight: 700;
+}
+
+.custom-loader {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 8px solid;
+  border-color: #e4e4ed;
+  border-right-color: #766df4;
+  animation: s2 1s infinite linear;
+}
+@keyframes s2 {
+  to {
+    transform: rotate(1turn);
+  }
 }
