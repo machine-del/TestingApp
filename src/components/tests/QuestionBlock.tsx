@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
-import type { Question } from "../types/testing";
+import type { CheckResult, Question } from "../../types/testing";
+import { Activity, useState } from "react";
 
 const OptionLabel = styled.label`
   display: flex;
@@ -59,48 +60,81 @@ const OptionList = styled.ul`
   list-style: none;
 `;
 
-type StudentsTestProps = {
+type QuestionBlockProps = {
   value: string | null | string[];
   question: Question;
+  result?: CheckResult;
+  showResult?: boolean;
   onChange: (id: number, value: string | string[] | null) => void;
 };
 
-export default function QuestionBlock(props: StudentsTestProps) {
-  const { question, value, onChange } = props;
+export default function QuestionBlock(props: QuestionBlockProps) {
+  const { question, value, onChange, showResult, result } = props;
+  const { id, options = [], type, text, correct, score, shuffle } = question;
+
+  const [statusText, setStatusText] = useState<"correct" | "warning" | "wrong">(
+    "wrong",
+  );
+
+  function getOptionState(
+    option: string,
+  ): "correct" | "warning" | "wrong" | undefined {
+    if (type === "multiple") {
+      const arr = Array.isArray(value) ? value : [];
+      const cor = Array.isArray(correct) ? correct : [];
+
+      if (arr.includes(option) && cor.includes(option)) {
+        return "correct";
+      }
+    }
+
+    if (type === "single") {
+      if (value === option && option === correct) return "correct";
+      if (value !== option && option === correct) return "wrong";
+    }
+
+    return undefined;
+  }
 
   return (
-    <QuestionCard key={question.id}>
+    <QuestionCard key={id}>
+      <legend>{statusText}</legend>
+      <div>
+        <Activity mode={showResult ? "visible" : "hidden"}>{result}</Activity>
+      </div>
+
       <ContainerQuestions>
-        <QuestionTitle>{question.text}</QuestionTitle>
+        <QuestionTitle>{text}</QuestionTitle>
       </ContainerQuestions>
 
-      {question.type === "text" && (
+      {type === "text" && (
         <TextAreaStyled
           placeholder="Введите свой ответ"
           value={typeof value === "string" ? value : ""}
-          onChange={(e) => onChange(question.id, e.target.value)}
+          onChange={(e) => onChange(id, e.target.value)}
         ></TextAreaStyled>
       )}
 
-      {question.type === "multiple" && (
+      {type === "multiple" && (
         <OptionList>
-          {(question.options ?? []).map((option, i) => {
+          {(options ?? []).map((option, i) => {
             const arr = Array.isArray(value) ? value : [];
             const checked = arr.includes(option);
 
             return (
               <li key={i}>
-                <OptionLabel htmlFor={`q-${question.id}-${i}`}>
+                <OptionLabel htmlFor={`q-${id}-${i}`}>
                   <input
-                    id={`q-${question.id}-${i}`}
+                    id={`q-${id}-${i}`}
                     type="checkbox"
                     value={option}
                     checked={checked}
                     onChange={() => {
+                      getOptionState(option);
                       const next = checked
                         ? arr.filter((ch) => ch !== option)
                         : [...arr, option];
-                      onChange(question.id, next);
+                      onChange(id, next);
                     }}
                   />
                   <span>{option}</span>
@@ -111,18 +145,18 @@ export default function QuestionBlock(props: StudentsTestProps) {
         </OptionList>
       )}
 
-      {question.type === "single" && (
+      {type === "single" && (
         <OptionList>
-          {(question.options ?? []).map((option, i) => (
+          {(options ?? []).map((option, i) => (
             <li key={i}>
-              <OptionLabel htmlFor={`q-${question.id}-${i}`}>
+              <OptionLabel htmlFor={`q-${id}-${i}`}>
                 <input
-                  id={`q-${question.id}-${i}`}
+                  id={`q-${id}-${i}`}
                   type="radio"
-                  name={`q-${question.id}`}
-                  aria-label={`Option ${i} q-${question.id}`}
+                  name={`q-${id}`}
+                  aria-label={`Option ${i} q-${id}`}
                   checked={value === option}
-                  onChange={() => onChange(question.id, option)}
+                  onChange={() => onChange(id, option)}
                 />
                 <span>{option}</span>
               </OptionLabel>

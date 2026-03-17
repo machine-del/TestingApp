@@ -22,11 +22,11 @@ const StyledButton = styled.button`
 
 type ButtonStyleProps = {
   title: string;
-  handleSubmit: () => void;
+  onClick: () => void;
 };
 
 export default function ButtonStyle(props: ButtonStyleProps) {
-  const { title, handleSubmit } = props;
+  const { title, onClick } = props;
 
-  return <StyledButton onClick={handleSubmit}>{title}</StyledButton>;
+  return <StyledButton onClick={onClick}>{title}</StyledButton>;
 }

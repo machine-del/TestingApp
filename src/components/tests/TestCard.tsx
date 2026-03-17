@@ -1,8 +1,10 @@
 import styled from "@emotion/styled";
-import type { Attempt, TestItem } from "../types/testing";
+import type { Attempt, TestItem } from "../../types/testing";
 import ScoreImage from "../../assets/Vector 3.png";
 import { CalendarIcon, DoneIcon, RetryIcon, TimeIcon } from "../../icons/icons";
 import { useNavigate } from "react-router-dom";
+import { ConfirmModal } from "../ConfirmModal";
+import { useState } from "react";
 
 const Card = styled.article`
   border: 1px solid #dde2e4;
@@ -163,7 +165,9 @@ type TestCardProps = {
 
 export function TestCard(props: TestCardProps) {
   const { test, lastAttempt } = props;
+  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
   const navigate = useNavigate();
+
   function formateDate(date?: string | null): string | null {
     if (!date) return null;
     const d = new Date(date);
@@ -208,10 +212,26 @@ export function TestCard(props: TestCardProps) {
 
   function handleClick() {
     if (actionBtn().status === "done") return;
+    if (!test.durationSec) return;
+
+    confirmFinish();
+  }
+
+  function confirmFinish() {
+    setIsOpenConfirmModal(() => false);
+
     navigate(`/student/test/${test.id}`, {
       state: { durationSec: test.durationSec },
     });
   }
+
+  const attemptsTest = test.attemptsAllowed;
+  const remainedAttempts =
+    attemptsTest === 1
+      ? "У вас осталось 1 попытка. Будьте осторожны!"
+      : "Хотите попробовать ещё раз?";
+  const titleModal =
+    actionBtn().status === "start" ? "Готовы пройти тест?" : remainedAttempts;
 
   return (
     <Card>
@@ -247,11 +267,13 @@ export function TestCard(props: TestCardProps) {
         )}
 
         {actionBtn().status === "start" && (
-          <StartBtn onClick={() => handleClick()}>{actionBtn().label}</StartBtn>
+          <StartBtn onClick={() => setIsOpenConfirmModal(true)}>
+            {actionBtn().label}
+          </StartBtn>
         )}
 
         {actionBtn().status === "retry" && (
-          <RetryBtn onClick={() => handleClick()}>
+          <RetryBtn onClick={() => setIsOpenConfirmModal(true)}>
             {actionBtn().label} <RetryIcon />
           </RetryBtn>
         )}
@@ -263,6 +285,13 @@ export function TestCard(props: TestCardProps) {
           <ScoreMaxValue>/10</ScoreMaxValue>
         </ScoreData>
       )}
+
+      <ConfirmModal
+        title={titleModal}
+        onClose={() => setIsOpenConfirmModal(false)}
+        open={isOpenConfirmModal}
+        onConfirm={handleClick}
+      />
     </Card>
   );
 }

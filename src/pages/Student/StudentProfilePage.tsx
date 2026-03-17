@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 import { LinkIcon } from "../../icons/icons";
 import styled from "@emotion/styled";
-import ChangeModalPassword from "../../components/ChangeModalPassword";
 import { Toast } from "../../components/ui/Toast";
+import ChangeModalPassword from "../../components/student/ChangeModalPassword";
 
 const Wrapper = styled.div`
   display: flex;

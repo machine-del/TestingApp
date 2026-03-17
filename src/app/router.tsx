@@ -9,6 +9,7 @@ import StudentsTestPage from "../pages/Student/StudentsTestPage";
 import { StudentStatsPage } from "../pages/Student/StudentStatsPage";
 import { StudentProfilePage } from "../pages/Student/StudentProfilePage";
 import StudentsTest from "../pages/Student/StudentsRunTest";
+import { StudentTestResultPage } from "../pages/Student/StudentTestResultPage";
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +43,10 @@ export const router = createBrowserRouter([
           {
             path: `profile`,
             element: <StudentProfilePage />,
+          },
+          {
+            path: `test/:id/result`,
+            element: <StudentTestResultPage />,
           },
         ],
       },

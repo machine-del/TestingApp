@@ -31,14 +31,17 @@ const WrapperTimer = styled.aside<{ danger: boolean }>`
 
 type TimerProps = {
   duration: number;
-  onFinish: () => void;
+  onFinish?: () => void;
+  finished?: boolean;
+  setTime?: (time: number) => void;
 };
 
-export default function Timer(props: TimerProps) {
-  const { duration, onFinish } = props;
+export function Timer(props: TimerProps) {
+  const { duration, onFinish, setTime, finished = false } = props;
   const [count, setCount] = useState(duration);
 
   useEffect(() => {
+    if (finished) return;
     const interval = setInterval(() => {
       setCount((c: number) => {
         if (c <= 1) {
@@ -56,6 +59,8 @@ export default function Timer(props: TimerProps) {
     if (count === 0 && onFinish) {
       onFinish();
     }
+
+    if (setTime) setTime(count);
   }, [count, onFinish]);
 
   function formatTime(seconds: number): string {

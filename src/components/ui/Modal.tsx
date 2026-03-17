@@ -28,7 +28,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   padding: 20px;
   gap: 16px;
-  position: absolute;
+  position: relative;
 `;
 
 const Header = styled.div`
@@ -36,13 +36,13 @@ const Header = styled.div`
   align-items: center;
   justify-content: center;
   gap: 10px;
+  min-height: 50px;
 `;
 
 const Title = styled.h2`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.33;
 `;
 
 const Body = styled.div`
@@ -55,13 +55,18 @@ const Footer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-content: center;
 `;
 
 const Close = styled.div`
   display: flex;
   gap: 10px;
-  position: relative;
-  top: -25px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
 `;
 
 type TaskModalProps = {
@@ -82,16 +87,24 @@ export function Modal(props: TaskModalProps) {
     return () => window.removeEventListener("keydown", keydwn);
   }, [open, onClose]);
 
-  if (!open) return;
+  console.log(onClose);
+
+  if (!open) return null;
+  
   return (
     <Overlay onClick={onClose}>
-      <ModalContainer onClick={(e) => e.stopPropagation()}>
+      <ModalContainer
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        onClick={(e) => e.stopPropagation()}
+      >
         <Header>
           <Title>{title}</Title>
           <Close onClick={onClose}>X</Close>
         </Header>
-        <Body>{children}</Body>
-        <Footer>{footer}</Footer>
+        {children && <Body>{children}</Body>}
+        {footer && <Footer>{footer}</Footer>}
       </ModalContainer>
     </Overlay>
   );

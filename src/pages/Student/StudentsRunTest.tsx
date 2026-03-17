@@ -1,13 +1,15 @@
 import styled from "@emotion/styled";
 import QuestionBlock from "../../components/tests/QuestionBlock";
-import Header from "../../components/Header";
-import { useParams } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
-import type { Question, TestItem } from "../../components/types/testing";
-import Timer from "../../components/tests/Timer";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Activity, useEffect, useMemo, useState } from "react";
+import type { AnswerState, Question, TestItem } from "../../types/testing";
+import { Timer } from "../../components/tests/Timer";
 import { Loader } from "../../components/ui/Loader";
 import ButtonStyle from "../../components/ui/ButtonStyle";
-import { Modal } from "../../components/ui/Modal";
+import Header from "../../components/student/Header";
+import { ConfirmModal } from "../../components/ConfirmModal";
+import { checkQuestion } from "../../utils/checkQuestion";
+import { ResultScore } from "../../components/tests/ResultScore";
 
 const Layout = styled.div`
   display: grid;
@@ -20,67 +22,30 @@ const OptionList = styled.ul`
   list-style: none;
 `;
 
-const ContainerButton = styled.div`
+const ContainerBox = styled.div`
   display: flex;
-  gap: 10px;
-`;
-
-const CancelButton = styled.button`
-  border: 1px solid #e5e5e5;
-  border-radius: 6px;
-  background: #fff;
-  padding: 8px;
-  cursor: pointer;
-  transition: 0.2s ease;
-  flex: 1 1 calc(50% - 10px);
-
-  &:hover {
-    background: #ff0000ff;
-    color: #fff;
-  }
-`;
-const SaveButton = styled.button<{ variant: "primary" | "default" }>`
-  display: flex;
-  flex: 1 1 calc(50% - 10px);
-  justify-content: center;
-  border: 1px solid #e5e5e5;
-  border-radius: 6px;
-  background: ${({ variant }) =>
-    variant === "primary" ? "#4094f7e5" : "#e5e5e5"};
-  color: #fff;
-  padding: 8px;
-  transition: 0.2s ease;
-  cursor: pointer;
-
-  &:hover {
-    background: ${({ variant }) =>
-      variant === "default" ? "#e5e5e5" : "#2d83f5"};
-  }
+  flex-direction: column;
+  gap: 19px;
 `;
 
 // type AnswerValueType = {
 //   value: string | string[] | null;
 // };
 
-type AnswerValue = {
-  type: "multiple" | "text" | "single";
-  value: string | string[] | null;
-};
-
-type AnswerState = Record<number, AnswerValue>;
-
 export default function StudentRunTest() {
   const params = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const testId = Number(params.id);
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
   const [testData, setTestData] = useState<TestItem | null>();
-  const durationSecond = testData?.durationSec;
+  const durationSecond = testData?.durationSec ?? 600;
   const [answer, setAnswer] = useState<AnswerState>({});
   const [second, setSecond] = useState(durationSecond);
   const [isLoading, setIsLoading] = useState(true);
+  const [showResult, setShowResult] = useState(false);
   const [error, setError] = useState("");
-  // const location = useLocation();
-  // console.log(location.state.durationSec);
+  const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
 
   useEffect(() => {
     const data = "/public/data/questions.json";
@@ -161,18 +126,53 @@ export default function StudentRunTest() {
     }).length;
   }, [answer]);
 
-  const totalCount = allQuestions.length;
+  const results = useMemo(() => {
+    return filtredQuestion.map((q) => checkQuestion(q, answer[q.id]));
+  }, [answer, filtredQuestion]);
+
+  console.log(results);
+
+  const totalCount = filtredQuestion.length;
   const allAnswered = answeredCount === totalCount;
 
+  const resultScore = results.reduce((acc, v) => {
+    return v.answer + acc;
+  }, 0);
+
+  const totalScore = results.reduce((acc, v) => {
+    return acc + v.max;
+  }, 0);
+
+  const title = allAnswered
+    ? "Завершить тест?"
+    : `Не все задания выполнены ${answeredCount + " / " + totalCount}, хотите завершить?`;
+
   function handleSubmit() {
-    const payload = {
-      testId,
-      answers: answer,
-      timeSpent: second,
-    };
-    console.log(payload);
-    console.log(allAnswered + " / " + totalCount);
-    console.log(totalCount);
+    // const payload = {
+    //   testId,
+    //   answers: answer,
+    //   timeSpent: second,
+    // };
+    // console.log(payload);
+    setShowResult(true);
+
+    if (testData?.allowRetry && testData.attemptsAllowed > 1) {
+      navigate(`/student/test/${testId}/result`, {
+        replace: true,
+        state: {
+          max: totalScore,
+          score: resultScore,
+          attempts: testData.attemptsAllowed - 1,
+          time: second,
+          finish: showResult,
+        },
+      });
+    }
+  }
+
+  function confirmFinish() {
+    setIsOpenConfirmModal(false);
+    handleSubmit();
   }
 
   if (Number.isNaN(testId)) {
@@ -216,30 +216,38 @@ export default function StudentRunTest() {
               question={q}
               value={answer[q.id]?.value ?? null}
               onChange={onChange}
+              showResult={showResult}
             />
           ))}
         </OptionList>
-        {second && (
-          <Timer
-            duration={second}
-            onFinish={() => console.log("Тест отправлен")}
-          />
-        )}
+        <ContainerBox>
+          <Activity mode={showResult ? "visible" : "hidden"}>
+            <ResultScore score={resultScore} max={totalScore} />
+          </Activity>
+          <Activity mode={second ? "visible" : "hidden"}>
+            <Timer
+              setTime={setSecond}
+              duration={second}
+              onFinish={() => {
+                if (showResult) handleSubmit();
+              }}
+            />
+          </Activity>
+        </ContainerBox>
       </Layout>
-      <ButtonStyle title={"Отправить"} handleSubmit={handleSubmit} />
-      {/* <Modal
-        title="Хотите закончить тестирование?"
-        onClose={() => false}
-        open={true}
-      >
-        <ContainerButton>
-          <CancelButton onClick={() => false}>Отменить</CancelButton>
-          <SaveButton variant={!allAnswered ? "primary" : "default"}>
-            {" "}
-            Подтвердить
-          </SaveButton>
-        </ContainerButton>
-      </Modal> */}
+
+      <ButtonStyle
+        title={"Отправить"}
+        onClick={() => setIsOpenConfirmModal(true)}
+      />
+
+      <ConfirmModal
+        title={title}
+        onClose={() => setIsOpenConfirmModal(false)}
+        open={isOpenConfirmModal}
+        onConfirm={confirmFinish}
+        confirmLabel="Завершить"
+      />
     </>
   );
 }

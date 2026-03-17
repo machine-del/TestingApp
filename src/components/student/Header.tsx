@@ -1,9 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { TestCard } from "../../components/tests/TestCard";
-import type { Attempt, TestItem } from "../../types/testing";
-import { SearchIcon } from "../../icons/icons";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect, useRef, useCallback } from "react";
 import styled from "@emotion/styled";
+import { useLocation } from "react-router-dom";
+import { SearchIcon } from "../../icons/icons";
 
 interface StudentHeaderProps {
   title?: string;
@@ -137,17 +135,7 @@ const HeaderTitle = styled.h1`
   letter-spacing: -2.2%;
 `;
 
-const Cards = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-`;
-
-export default function StudentsTestPage({ title = "" }: StudentHeaderProps) {
-  const [tests, setTests] = useState<TestItem[]>([]);
-  const [attempts, setAttempts] = useState<Attempt[]>([]);
-  const [isLoading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+export default function Header({ title = "" }: StudentHeaderProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -209,42 +197,13 @@ export default function StudentsTestPage({ title = "" }: StudentHeaderProps) {
     [searchQuery],
   );
 
-  useEffect(() => {
-    const tests = "/public/data/tests.json";
-    const attempts = "/public/data/attempts.json";
-
-    Promise.all([fetch(tests), fetch(attempts)])
-      .then(async ([res1, res2]) => {
-        setLoading(true);
-        if (!res1.ok) throw new Error(res1.status.toString());
-        if (!res2.ok) throw new Error(res2.status.toString());
-        const r = await res1.json();
-        const a = await res2.json();
-        setTests(r);
-        setAttempts(a);
-      })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  const lastAttemptByTest = useMemo(() => {
-    const unique = new Map();
-    const mine = attempts.filter((a) => a.userId === 1);
-    for (const element of mine) unique.set(element.userId, element);
-    return unique;
-  }, [attempts]);
-
-  if (isLoading) return <div className="custom-loader" />;
-  if (error) return <h3>{error}</h3>;
-
   return (
-    <section>
+    <>
       <HeaderContainer>
         <HeaderLeft>
           <HeaderTitle>{isTestsHeader}</HeaderTitle>
         </HeaderLeft>
+
         <HeaderRight>
           <SearchContainer>
             {searchOpen ? (
@@ -284,16 +243,6 @@ export default function StudentsTestPage({ title = "" }: StudentHeaderProps) {
           )}
         </HeaderRight>
       </HeaderContainer>
-
-      <Cards>
-        {tests.map((test) => (
-          <TestCard
-            key={test.id}
-            test={test}
-            lastAttempt={lastAttemptByTest.get(test.id)}
-          />
-        ))}
-      </Cards>
-    </section>
+    </>
   );
 }
