@@ -1,10 +1,19 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 
-const WrapperTimer = styled.aside<{ danger: boolean }>`
-  color: ${(p) => (p.danger ? "#DF0000" : "#1E7EE8")};
-  border: 1px solid ${(p) => (p.danger ? "#FFD7D7" : "#84CAFF")};
-  background-color: ${(p) => (p.danger ? "#ffcdcd" : "#FCFEFF")};
+const WrapperTimer = styled.aside<{ danger: boolean; finished: boolean }>`
+  color: ${(p) => {
+    if (p.finished) return "#475569";
+    return p.danger ? "#e00000" : "#1b5de0";
+  }};
+  border: 1px solid ${(p) => {
+    if (p.finished) return "#e5e7eb";
+    return p.danger ? "#ffb3b3" : "#cfe0ff";
+  }};
+  background-color: ${(p) => {
+    if (p.finished) return "#f8fafc";
+    return p.danger ? "#fff1f1" : "#f8faff";
+  }};
 
   height: 132px;
   max-width: 321px;
@@ -39,6 +48,7 @@ type TimerProps = {
 export function Timer(props: TimerProps) {
   const { duration, onFinish, setTime, finished = false } = props;
   const [count, setCount] = useState(duration);
+  // const [timeIsOver, setTimeIsOver] = useState(false);
 
   useEffect(() => {
     if (finished) return;
@@ -46,6 +56,7 @@ export function Timer(props: TimerProps) {
       setCount((c: number) => {
         if (c <= 1) {
           clearInterval(interval);
+          // setTimeIsOver(true);
           return 0;
         }
         return c - 1;
@@ -53,9 +64,10 @@ export function Timer(props: TimerProps) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [finished]);
 
   useEffect(() => {
+    // if (!timeIsOver) return;
     if (count === 0 && onFinish) {
       onFinish();
     }
@@ -72,12 +84,13 @@ export function Timer(props: TimerProps) {
     return `${m}:${s}`;
   }
 
-  const danger = count <= duration / 4;
+  const danger = count <= duration / 4 && !finished;
+  const userTime = finished ? "Время решения" : "Осталось времени:";
 
   return (
     <>
-      <WrapperTimer danger={danger}>
-        <h4 className="timer-title">Осталось времени:</h4>
+      <WrapperTimer danger={danger} finished={finished}>
+        <h4 className="timer-title">{userTime}</h4>
         <div className="time">{formatTime(count)}</div>
       </WrapperTimer>
     </>

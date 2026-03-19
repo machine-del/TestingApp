@@ -23,10 +23,11 @@ const StyledButton = styled.button`
 type ButtonStyleProps = {
   title: string;
   onClick: () => void;
+  disabled: boolean;
 };
 
 export default function ButtonStyle(props: ButtonStyleProps) {
-  const { title, onClick } = props;
+  const { title, onClick, disabled } = props;
 
-  return <StyledButton onClick={onClick}>{title}</StyledButton>;
+  return <StyledButton onClick={onClick} disabled={disabled}>{title}</StyledButton>;
 }

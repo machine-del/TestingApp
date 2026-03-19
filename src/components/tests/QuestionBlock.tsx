@@ -98,10 +98,10 @@ export default function QuestionBlock(props: QuestionBlockProps) {
 
   return (
     <QuestionCard key={id}>
-      <legend>{statusText}</legend>
-      <div>
+      {/* <legend>{statusText}</legend> */}
+      {/* <div>
         <Activity mode={showResult ? "visible" : "hidden"}>{result}</Activity>
-      </div>
+      </div> */}
 
       <ContainerQuestions>
         <QuestionTitle>{text}</QuestionTitle>

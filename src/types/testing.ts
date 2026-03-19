@@ -53,5 +53,5 @@ export type AnswerState = Record<number, AnswerValue>;
 export type CheckResult = {
   max: number;
   answer: number;
-  status?: "correct" | "warning" | "wrong";
+  status?: "correct" | "warning" | "wrong" | "skipped";
 };

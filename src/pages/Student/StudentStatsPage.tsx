@@ -1,3 +1,5 @@
 export function StudentStatsPage() {
+
+
   return <></>;
 }

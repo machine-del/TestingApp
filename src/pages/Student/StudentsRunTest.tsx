@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import QuestionBlock from "../../components/tests/QuestionBlock";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Activity, useEffect, useMemo, useState } from "react";
 import type { AnswerState, Question, TestItem } from "../../types/testing";
 import { Timer } from "../../components/tests/Timer";
@@ -34,7 +34,6 @@ const ContainerBox = styled.div`
 
 export default function StudentRunTest() {
   const params = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
   const testId = Number(params.id);
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
@@ -64,7 +63,7 @@ export default function StudentRunTest() {
       .finally(() => setIsLoading(false));
     return () => {};
   }, [testId]);
-
+  
   useEffect(() => {
     const data = "/public/data/tests.json";
     fetch(data)
@@ -83,6 +82,11 @@ export default function StudentRunTest() {
       .finally(() => setIsLoading(false));
     return () => {};
   }, [testId]);
+
+  useEffect(() => {
+    if (!testData) return;
+    setSecond(testData?.durationSec);
+  }, [testData]);
 
   const filtredQuestion = useMemo(
     () => allQuestions.filter((q) => q.testId === testId),
@@ -156,6 +160,8 @@ export default function StudentRunTest() {
     // console.log(payload);
     setShowResult(true);
 
+    let spentSeconds = durationSecond - second;
+
     if (testData?.allowRetry && testData.attemptsAllowed > 1) {
       navigate(`/student/test/${testId}/result`, {
         replace: true,
@@ -163,7 +169,7 @@ export default function StudentRunTest() {
           max: totalScore,
           score: resultScore,
           attempts: testData.attemptsAllowed - 1,
-          time: second,
+          time: spentSeconds,
           finish: showResult,
         },
       });
@@ -227,7 +233,7 @@ export default function StudentRunTest() {
           <Activity mode={second ? "visible" : "hidden"}>
             <Timer
               setTime={setSecond}
-              duration={second}
+              duration={second ?? 0}
               onFinish={() => {
                 if (showResult) handleSubmit();
               }}
@@ -239,6 +245,7 @@ export default function StudentRunTest() {
       <ButtonStyle
         title={"Отправить"}
         onClick={() => setIsOpenConfirmModal(true)}
+        disabled={showResult}
       />
 
       <ConfirmModal

@@ -11,6 +11,7 @@ export function checkQuestion(
     return {
       max: question.score,
       answer: 0,
+      status: "skipped",
     };
   }
 
@@ -18,6 +19,7 @@ export function checkQuestion(
     return {
       max: question.score,
       answer: 0,
+      status: "wrong",
     };
   }
 
@@ -74,5 +76,6 @@ export function checkQuestion(
   return {
     max: question.score,
     answer: 0,
+    status: "wrong"
   };
 }

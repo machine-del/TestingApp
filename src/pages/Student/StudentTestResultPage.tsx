@@ -47,7 +47,6 @@ export function StudentTestResultPage() {
   }
 
   console.log(finish);
-
   return (
     <div>
       <Header title={`Тестирование №${id}`} />
@@ -58,7 +57,9 @@ export function StudentTestResultPage() {
           <div>Осталось попыток: {attempts}</div>
         </Activity>
       </div>
-      <BaseButton onClick={takeTheTestAgain}>Пройти заново</BaseButton>
+      <Activity mode={attempts === 0 ? 'hidden' : 'visible'}>
+        <BaseButton onClick={takeTheTestAgain}>Пройти заново</BaseButton>
+      </Activity>
     </div>
   );
 }
