@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { NavMenu } from "../components/NavMenu";
+import { StoreProvider } from "../store/StoreProvider";
 
 export function AppLayout() {
   return (
@@ -8,7 +9,9 @@ export function AppLayout() {
         <NavMenu />
       </header>
       <main>
-        <Outlet />
+        <StoreProvider>
+          <Outlet />
+        </StoreProvider>
       </main>
       <footer>© 2025</footer>
     </>

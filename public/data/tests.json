@@ -5,7 +5,7 @@
     "shortDescription": "Описание тестирования длинный текст дадададада…",
     "durationSec": 2000,
     "passScore": 70,
-    "attemptsAllowed": 3,
+    "attemptsAllowed": 2,
     "allowRetry": true,
     "isPublished": true,
     "meta": {
@@ -23,7 +23,7 @@
     "shortDescription": "Короткое описание для второго теста…",
     "durationSec": 2000,
     "passScore": 80,
-    "attemptsAllowed": 1,
+    "attemptsAllowed": 2,
     "allowRetry": false,
     "isPublished": true,
     "meta": {

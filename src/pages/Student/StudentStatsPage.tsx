@@ -1,5 +1,11 @@
-export function StudentStatsPage() {
+import { observer } from "mobx-react-lite";
+import { useStores } from "../../store/useStore";
 
-
-  return <></>;
-}
+export const StudentStatsPage = observer(() => {
+  const title = useStores().testRunStore;
+  return (
+    <div>
+      <h1>{title.value}</h1>
+    </div>
+  );
+});

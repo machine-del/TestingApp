@@ -24,7 +24,8 @@
     "testId": 1,
     "type": "text",
     "text": "Укажите правильный DOCTYPE для HTML5.",
-    "score": 1
+    "score": 1,
+    "correct": "<!DOCTYPE html>"
   },
   {
     "id": 1004,
@@ -73,7 +74,8 @@
     "testId": 2,
     "type": "text",
     "text": "Напишите CSS-свойство для установки межстрочного интервала.",
-    "score": 1
+    "score": 1,
+    "correct": "line-height"
   },
   {
     "id": 2004,

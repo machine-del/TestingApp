@@ -63,7 +63,7 @@ export default function StudentRunTest() {
       .finally(() => setIsLoading(false));
     return () => {};
   }, [testId]);
-  
+
   useEffect(() => {
     const data = "/public/data/tests.json";
     fetch(data)
@@ -160,7 +160,7 @@ export default function StudentRunTest() {
     // console.log(payload);
     setShowResult(true);
 
-    let spentSeconds = durationSecond - second;
+    const spentSeconds = durationSecond - second;
 
     if (testData?.allowRetry && testData.attemptsAllowed > 1) {
       navigate(`/student/test/${testId}/result`, {

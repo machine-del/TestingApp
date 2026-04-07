@@ -5,7 +5,7 @@ import { StudentLayout } from "../layout/StudentLayout";
 import { AdminLayout } from "../layout/AdminLayout";
 import { AdminPage } from "../pages/Admin/AdminPage";
 import { LoginPage } from "../pages/Login/LoginPage";
-import StudentsTestPage from "../pages/Student/StudentsTestPage";
+import { StudentsTestPage } from "../pages/Student/StudentsTestPage";
 import { StudentStatsPage } from "../pages/Student/StudentStatsPage";
 import { StudentProfilePage } from "../pages/Student/StudentProfilePage";
 import StudentsTest from "../pages/Student/StudentsRunTest";
