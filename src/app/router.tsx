@@ -8,7 +8,7 @@ import { LoginPage } from "../pages/Login/LoginPage";
 import { StudentsTestPage } from "../pages/Student/StudentsTestPage";
 import { StudentStatsPage } from "../pages/Student/StudentStatsPage";
 import { StudentProfilePage } from "../pages/Student/StudentProfilePage";
-import StudentsTest from "../pages/Student/StudentsRunTest";
+import { StudentRunTest } from "../pages/Student/StudentsRunTest";
 import { StudentTestResultPage } from "../pages/Student/StudentTestResultPage";
 
 export const router = createBrowserRouter([
@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
           },
           {
             path: `test/:id`,
-            element: <StudentsTest />,
+            element: <StudentRunTest />,
           },
           {
             path: `statistics`,
